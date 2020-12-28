@@ -1,0 +1,37 @@
+/* #flex-magic {
+     flex: 0 0 100%; 
+} */
+label{
+    text-align: left;
+    float: left;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.text-center{
+    text-align: center;
+}
+.heading{
+    text-transform: capitalize;
+}
+#max-width{
+    width:100%;
+    height: auto;
+}
+.img-thumbnail{
+    padding:0;
+}
+.well{
+    padding:16px;
+}
+.well2{
+    background-color: #e0dbcc;
+}
+.inline{
+    display: inline-block;
+}
+.btn-xs.btn {
+    padding: 0.10rem 0.2rem;
+    font-size: 0.575rem;
+    line-height: 1.25;
+    border-radius: 0.2rem;
+  }

@@ -1,0 +1,26 @@
+<%- include("../partials/header.ejs") %>
+
+<div id="back-1">
+    <div class="container my-5 mx-auto text-center" style="width:40%;">
+        <div class="text-center"><h2 class="mb-3 mt-2 px-0">Add New Product</h2></div>
+        <div class="p-5" style=" border: 3px solid rgb(20, 20, 20);">
+                <form action="/filter" method="POST">
+                    <div class="form-group">
+                        <label class="mb-3" for="filter">Choose your Category</label>
+                        <select name="filter" class="form-control" id="filter">
+                            <option value=1 >Vehicles</option>
+                            <option value=2 >Electronic Appliances</option>
+                            <option value=3 >Furnitures</option>
+                            <option value=4 >Mobiles</option>
+                            <option value=5 >Books, Sports and Hobbies</option>
+                            <option value=6 selected>Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+        </div>
+    </div>
+</div>
+
+
+<%- include("../partials/footer.ejs") %>

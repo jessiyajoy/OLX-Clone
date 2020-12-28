@@ -1,0 +1,87 @@
+<%- include("../partials/header.ejs") %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 justify-content-center mt-5">
+                <div class="img-responsive">
+                    <img id="max-width" src="<%=image2 %>" alt="">
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="img-thumbnail mt-2 mb-2">
+                    <div class="img-responsive">
+                        <img id="max-width" src="<%=prod.image_url %>" alt="">
+                    </div>
+                    <div class="card well">
+                        <div>
+                            <h4 class="float-right">₹<%= prod.price %></h4>
+                            <h4 class="text-info heading"><%=prod.product_name %></h2>
+                        </div>
+                        <p class="lead"><%=prod.description %></p>
+                        <%if(prod.conditionn){%>
+                            <div>
+                                <p >Condition : <%=prod.conditionn %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.year_purchased){%>
+                            <div>
+                                <p>Year Purchased : <%=prod.year_purchased %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.fuel_economy){%>
+                            <div>
+                                <p >Fuel Economy: <%=prod.fuel_economy %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.brand){%>
+                            <div>
+                                <p >Brand : <%=prod.brand %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.kms_driven){%>
+                            <div>
+                                <p >Kms Driven : <%=prod.kms_driven %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.furniture_type){%>
+                            <div>
+                                <p >Furniture Type : <%=prod.furniture_type %></p>
+                            </div>
+                        <%}%>
+                        <%if(prod.device_name){%>
+                            <div>
+                                <p >Device Name : <%=prod.device_name %></p>
+                            </div>
+                        <%}%>
+                        <div>
+                            <p >Post Date : <%=prod.post_date %></p>
+                        </div>
+                        <div>
+                            <p >Location : <%=prod.city %> - <%=prod.pin %>, <%=prod.state %></p>
+                        </div>
+                        <div class="mb-3">
+                            <a href="/users/<%=prod.sellerID%>"><em>Submitted by <%=prod.sellerID%></em></a>
+                            <% if(isAdmin){ %>
+                                <a href="/products/<%=prod.id%>/delete" class="btn btn-danger">Delete</a>
+                            <%}%>
+                            <a href="/products/<%=prod.id%>/buy" class="float-right btn btn-danger">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card well well2 my-2">
+                        <div class="mb-3">
+                            <a href="/products/<%=prod.id%>/chat" class="float-right btn btn-success">Send New Message</a>
+                        </div>
+                        <% chat.forEach(function(cmt){ %>
+                            <div>
+                                <h6 class="float-right"><%=cmt.time_stamp%></h6>
+                                <h6><strong><%= cmt.buyerID %></strong></h6>
+                            </div>
+                            <div class="mb-2">
+                            <p class="mb-0 pb-0"><%= cmt.message %> </p>
+                            </div>
+                        <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+<%- include("../partials/footer.ejs") %>

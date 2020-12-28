@@ -1,0 +1,40 @@
+<%- include("../partials/header.ejs") %>
+    <div class="container">
+        <div class="jumbotron" style="height: 250px;">
+            <div class="float-left">
+                <h1>OLX</h1>
+                <p class="lead">My Products</p>
+            </div>
+
+            <!-- <form class="form-inline mt-3 " action="/products/" method="GET">
+            <div class="form-group mr-sm-3">
+                <label for="search" class="sr-only">Search</label>
+                <input type="text" class="form-control" id="search" name="search" placeholder="Search products...">
+            </div>
+            <button type="submit" class="btn btn-success ">Search</button>
+        </form> -->
+        </div>
+        <div class="row mt-5  ">
+            <% products.forEach(function(elt){ %>
+                <div class="col-lg-4 col-xl-3 col-sm-6 col-12">
+                    <div class="card mb-2">
+                        <!-- <img class="card-img-top img-width" src="<%= elt.image_url %>" alt="Card image cap"> -->
+                        <div class="card-body p-0 text-center pt-1">
+                            <h5 class="card-title mb-0 mt-2 heading">
+                                <%= elt['product_name'] %>
+                            </h5>
+                            <p>
+                                <%= elt['description'] %>
+                            </p>
+                            <p>
+                                <%= elt['price'] %>
+                            </p>
+                            <a href="/products/<%=elt.id%>/edit" class="btn btn-outline-danger my-2">Edit</a>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+
+    <%- include("../partials/footer.ejs") %>

@@ -1,0 +1,23 @@
+<%- include("../partials/header.ejs") %>
+
+<div id="back-1">
+    <div class="container my-5 mx-auto text-center" style="width:40%;">
+        <div class="text-center"><h3 class="mb-3 mt-2 px-0">Payment of ₹<%=prod.price%> for <%=prod.product_name%></h3></div>
+        <div class="p-5" style=" border: 3px solid rgb(20, 20, 20);">
+                <form action="/payment_mode/<%=prod.id%>" method="POST">
+                    <div class="form-group">
+                        <label class="mb-3" for="filter">Payment Mode</label>
+                        <select name="mode" class="form-control" id="filter">
+                            <option value=1 >Debit Card</option>
+                            <option value=2 >Credit Card</option>
+                            <option value=3 selected>Cash on Delivery</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+        </div>
+    </div>
+</div>
+
+
+<%- include("../partials/footer.ejs") %>

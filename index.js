@@ -456,10 +456,18 @@ app.post("/products/:id/edit", (req, res) => {
 
 app.get('/my_products', (req, res) => {
     sql1 = 'Select * from product_info p where p.sellerID=?';
+    sql2 = 'Select * from order_details o where o.buyer_id=?';
+    sql3 = 'Select * from product_info JOIN order_details ON product_info.id = order_details.product_id where order_details.buyer_id=?';
     let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
-        console.log(err);
         products = rows;
-        res.render("products/my_products", { products: products });
+        let query1 = mysqlConnection.query(sql2, currentUser, (err, rows, fields) => {
+            let query1 = mysqlConnection.query(sql3, currentUser, (err, rows, fields) => {
+                console.log(err);
+                purchased = rows;
+                console.log("Purchased Items:",purchased);
+                res.render("products/my_products", { products: products, purchased: purchased });   
+            })
+        })
     })
 })
 

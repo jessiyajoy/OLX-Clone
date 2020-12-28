@@ -454,45 +454,79 @@ app.post("/products/:id/edit", (req, res) => {
     })
 })
 
+// app.get('/my_products', (req, res) => {
+//     sql1 = 'Select * from product_info p where p.sellerID=?';
+//     sql2 = 'Select * from order_details o where o.buyer_id=?';
+//     sql3 = 'Select * from product_info JOIN order_details ON product_info.id = order_details.product_id where order_details.buyer_id=?';
+//     let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
+//         products = rows;
+//         let query1 = mysqlConnection.query(sql2, currentUser, (err, rows, fields) => {
+//             let query1 = mysqlConnection.query(sql3, currentUser, (err, rows, fields) => {
+//                 console.log(err);
+//                 purchased = rows;
+//                 console.log("Purchased Items:",purchased);
+//                 res.render("products/my_products", { products: products, purchased: purchased });   
+//             })
+//         })
+//     })
+// })
+
 app.get('/my_products', (req, res) => {
     sql1 = 'Select * from product_info p where p.sellerID=?';
     sql2 = 'Select * from order_details o where o.buyer_id=?';
     sql3 = 'Select * from product_info JOIN order_details ON product_info.id = order_details.product_id where order_details.buyer_id=?';
+    sql4 = 'Select * from feedback JOIN order_details ON feedback.order_id = order_details.order_id where order_details.buyer_id=? ';
+
     let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
         products = rows;
-        let query1 = mysqlConnection.query(sql2, currentUser, (err, rows, fields) => {
-            let query1 = mysqlConnection.query(sql3, currentUser, (err, rows, fields) => {
-                console.log(err);
+        rating = 0;
+        number_of_reviews = 0;
+        let query2 = mysqlConnection.query(sql2, currentUser, (err, rows, fields) => {
+            let query3 = mysqlConnection.query(sql3, currentUser, (err, rows, fields) => {
                 purchased = rows;
-                console.log("Purchased Items:",purchased);
-                res.render("products/my_products", { products: products, purchased: purchased });   
+                console.log("Purchased Items:", purchased);
+
+                let query4 = mysqlConnection.query(sql4, currentUser, (err, rows, fields) => {
+                    rating_data = rows;
+                    console.log("RATING DATA: ", rows);
+                    console.log(err);
+
+                    res.render("products/my_products", { products: products, purchased: purchased, rating: rating, number_of_reviews: number_of_reviews });
+                })
             })
         })
     })
 })
 
+app.post('/products/:id/feedback', (req, res) => {
+    console.log("HELLO PLEASE ENTER HERE");
+    let productId = req.params.id;
+    let sql1 = 'Select order_id from order_details JOIN product_info ON product_info.id = order_details.product_id where order_details.buyer_id=?';
+    let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
+        let data = {
+            order_id: req.params.id,
+            rating: req.body.rate,
+            message: req.body.message,
+        }
+        console.log("FEDDBACK FORM:", data);
+        let sql2 = 'INSERT INTO feedback SET ?';
+        let query2 = mysqlConnection.query(sql2, data, (err, rows, fields) => {
+            console.log(err);
+            res.redirect("/my_products");
+        });
+    })
+})
+app.get('/products/:id/feedback', (req, res) => {
+    let productId = req.params.id;
+    let sql1 = 'Select order_id from order_details JOIN product_info ON product_info.id = order_details.product_id where order_details.buyer_id=?';
+    let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
+        orderID = rows[0].order_id;
+        console.log("ODERID IS: ", orderID);
+        res.render("products/feedback", { orderID: orderID });
+    });
+})
 
-// app.get('/past_orders/:id', (req, res)=>{
-//     sql1='Select p.sellerID from product_info p where p.id=?';
-//     let query1=mysqlConnection.query(sql1,req.params.id,(err,rows,fields)=>{
-//       console.log(err);
-//         var from_seller=false;
-//         if(rows[0].sellerID==currentUser){
-//           from_seller=true;
-//         }
-//         var data={
-//           productID : req.params.id,
-//           buyerID : currentUser,
-//           time_stamp : new Date(),
-//           from_seller : from_seller,
-//           message: req.body.msg
-//         }
-//         let query1=mysqlConnection.query(sql1,data,(err,rows,fields)=>{
-//           console.log(err);
-//           res.redirect("/products/"+req.params.id);
-//         })
-//       })
-// })
+
 
 // var datetime = new Date();
 // console.log(datetime.toISOString().slice(0,10));

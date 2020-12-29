@@ -1,7 +1,9 @@
 <%- include("../partials/header.ejs") %>
 <body>
+    <div class="container mt-5" style="width:50%;">
         <form action="/products/<%= orderID %>/feedback" method="POST">
-            <div class="rate">
+            <h4 class="mt-5 lead">Give Your Rating</h4>
+            <div class="rate float-left">
                 <input type="radio" id="star5" name="rate" value="5" />
                 <label for="star5" title="text">5 stars</label>
                 <input type="radio" id="star4" name="rate" value="4" />
@@ -13,11 +15,13 @@
                 <input type="radio" id="star1" name="rate" value="1" />
                 <label for="star1" title="text">1 star</label>
             </div>
+            <br><br><br>
             <div class="form-group">
                 <label for="desc-1">Any Comments?</label>
                 <textarea type="text" class="form-control" name="message" rows="5" id="desc-1"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+    </div>
   
 <%- include("../partials/footer.ejs") %>

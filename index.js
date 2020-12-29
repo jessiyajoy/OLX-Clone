@@ -119,8 +119,34 @@ app.get('/logout', function(req, res) {
 //product routes
 app.get('/products', function(req, res) {
     sql1 = 'SELECT p.product_name,i.image_url,p.id from product_info p inner join images i on p.id=i.productID inner join categories c on p.categoryID = c.id where p.sold is NULL';
+    let products = [];
     let query1 = mysqlConnection.query(sql1, (err, rows, fields) => {
-        res.render("products/index", { products: rows, filter: 1 });
+        console.log(err);
+        if (typeof rows !== 'undefined') {
+            products = rows;
+        } else {
+            products = [];
+        }
+        let prods = [];
+        if(products.length != 0) {
+            prods.push(rows[0]);
+        }
+        let i = 0, j = 0;
+        for (i = 0; i < products.length; i++) {
+            const element = products[i];
+            console.log("The Item is:",element);
+            console.log("id of item is:", element.id);
+            for (j = 0; j < prods.length; j++) {
+                if(element.id == prods[j].id) {
+                    break;
+                }
+            }
+            if(j==prods.length) {
+                prods.push(element);
+            }
+        }
+        console.log("Revised List of Prods are:", prods);
+        res.render("products/index", { products: prods, filter: 1 });
     });
 })
 
@@ -230,7 +256,32 @@ app.post('/products/filter', (req, res) => {
     } else {
         sql1 = 'SELECT p.product_name,i.image_url,p.id from product_info p inner join images i on p.id=i.productID inner join categories c on p.categoryID = c.id where c.category_type=? and p.sold is NULL';
         let query1 = mysqlConnection.query(sql1, req.body.filter, (err, rows, fields) => {
-            res.render("products/index", { products: rows, filter: req.body.filter });
+        console.log(err);
+        if (typeof rows !== 'undefined') {
+            products = rows;
+        } else {
+            products = [];
+        }
+        let prods = [];
+        if(products.length != 0) {
+            prods.push(rows[0]);
+        }
+        let i = 0, j = 0;
+        for (i = 0; i < products.length; i++) {
+            const element = products[i];
+            console.log("The Item is:",element);
+            console.log("id of item is:", element.id);
+            for (j = 0; j < prods.length; j++) {
+                if(element.id == prods[j].id) {
+                    break;
+                }
+            }
+            if(j==prods.length) {
+                prods.push(element);
+            }
+        }
+        console.log("Revised List of Prods are:", prods);
+        res.render("products/index", { products: prods, filter: req.body.filter });
         });
     }
 })
@@ -472,26 +523,85 @@ app.post("/products/:id/edit", (req, res) => {
 // })
 
 app.get('/my_products', (req, res) => {
-    sql1 = 'Select * from product_info p where p.sellerID=?';
+    sql1 = 'Select p.id,p.sold,p.price,i.image_url,p.description,p.product_name from product_info p inner join images i on p.id=i.productID where p.sellerID=?';
     sql2 = 'Select * from order_details o where o.buyer_id=?';
-    sql3 = 'Select * from product_info JOIN order_details ON product_info.id = order_details.product_id where order_details.buyer_id=?';
-    sql4 = 'Select * from feedback JOIN order_details ON feedback.order_id = order_details.order_id where order_details.buyer_id=? ';
+    sql3 = 'Select p.id,p.price,i.image_url,p.description,p.product_name from product_info p inner JOIN order_details ON p.id = order_details.product_id inner join images i on p.id=i.productID where order_details.buyer_id=?';
+    sql4 = 'Select * from feedback JOIN order_details ON feedback.order_id = order_details.order_id where order_details.seller_id=? ';
 
     let query1 = mysqlConnection.query(sql1, currentUser, (err, rows, fields) => {
+       if (typeof rows !== 'undefined') {
         products = rows;
-        rating = 0;
+        } else {
+            products = [];
+        }
+        let prods = [];
+        if(products.length != 0) {
+            prods.push(rows[0]);
+        }
+        let i = 0, j = 0;
+        for (i = 0; i < products.length; i++) {
+            const element = products[i];
+            console.log("The Item is:",element);
+            console.log("id of item is:", element.id);
+            for (j = 0; j < prods.length; j++) {
+                if(element.id == prods[j].id) {
+                    break;
+                }
+            }
+            if(j==prods.length) {
+                prods.push(element);
+            }
+        }
+        console.log("Revised List of Prods are:", prods);
+        products = prods;
+        // rating = 0;
         number_of_reviews = 0;
         let query2 = mysqlConnection.query(sql2, currentUser, (err, rows, fields) => {
             let query3 = mysqlConnection.query(sql3, currentUser, (err, rows, fields) => {
-                purchased = rows;
+
+                if (typeof rows !== 'undefined') {
+                    purchased = rows;
+                    } else {
+                        purchased = [];
+                    }
+                    let purchased1 = [];
+                    if(purchased.length != 0) {
+                        purchased1.push(rows[0]);
+                    }
+                    let i = 0, j = 0;
+                    for (i = 0; i < purchased.length; i++) {
+                        const element = purchased[i];
+                        console.log("The Item is:",element);
+                        console.log("id of item is:", element.id);
+                        for (j = 0; j < purchased1.length; j++) {
+                            if(element.id == purchased1[j].id) {
+                                break;
+                            }
+                        }
+                        if(j==purchased1.length) {
+                            purchased1.push(element);
+                        }
+                    }
+                
+
+
+                purchased = purchased1;
                 console.log("Purchased Items:", purchased);
 
                 let query4 = mysqlConnection.query(sql4, currentUser, (err, rows, fields) => {
                     rating_data = rows;
-                    console.log("RATING DATA: ", rows);
+                    var rating=0,n=0;
+                    rows.forEach(element => {
+                        rating+=element.rating;
+                        n+=1;
+                    });
+                    if(n!=0){
+                        rating=rating/n;
+                    }
+                    //console.log("RATING DATA: ", rows);
                     console.log(err);
 
-                    res.render("products/my_products", { products: products, purchased: purchased, rating: rating, number_of_reviews: number_of_reviews });
+                    res.render("products/my_products", { products: products, purchased: purchased, rating: rating, n:n,number_of_reviews: number_of_reviews });
                 })
             })
         })
